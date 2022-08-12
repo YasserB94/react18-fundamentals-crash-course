@@ -1,10 +1,11 @@
 import "./App.css";
+import { Authenticated } from "./Components/Authenticated";
 // import { IncrementalButton } from "./Components/IncrementalButton";
-import { Clicker } from "./Components/Clicker";
+import { Parent } from "./Components/Parent";
 function App() {
   return (
     <div className="App">
-      <Clicker />
+      <Authenticated></Authenticated>
     </div>
   );
 }

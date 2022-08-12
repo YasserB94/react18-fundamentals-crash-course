@@ -246,10 +246,12 @@ A commonly used term that should sound somewhat familiar after this chapter.
 ### Events in React.
 - The Click event
     - When adding a function to an Event, we do not add parentheses, or it will run when the component renders
+
 ```javascript
       <button onClick={handleClick}>Click</button>
 ```
     - Or we wrap it in an arrow function, where we can also pass in the event
+
 ```javascript
  <button
         onClick={(e) => {
@@ -260,4 +262,103 @@ A commonly used term that should sound somewhat familiar after this chapter.
       </button>
 ```
 
-### Patent - Child communication
+### Parent - Child communication
+- This example uses two classes
+    - A Parent component, with a simple function console logging 'Hello'
+    - A Child component which is a button
+
+    - The Goal: Make the parent's function run by the Child's button being clicked.
+
+- This will be achieved trough Props (properties). To pass the function to the child component. Remember to not add parentheses so the function does not run!
+```javascript
+import { Child } from "./Child";
+export const Parent = () => {
+  const sayHello = () => {
+    console.warn("Parent says hello back!");
+  };
+
+  return <Child helloParent={sayHello} />;
+};
+
+```
+```javascript
+export const Child = (props) => {
+  return (
+    <button onClick={props.helloParent}>
+      Child Button would like to say hi to it's parent!
+    </button>
+  );
+};
+
+```
+Success!!! The parent's function fires when the child's button is clicked.
+
+Time for an upgrade, let's also tell our parent something.
+- Now we need to wrap the logic to run onClick in an arrow function so that we can add the parentheses without it firing everytime it renders
+```javascript
+import { Child } from "./Child";
+export const Parent = () => {
+  const sayHello = (message) => {
+    console.warn(`Child says: ${message}`);
+    console.warn("Parent is not responding....");
+  };
+  return <Child helloParent={sayHello} />;
+};
+```
+```javascript
+export const Child = (props) => {
+  return (
+    <button
+      onClick={() => {
+        props.helloParent("Hello there parent!");
+      }}
+    >
+      Child Button would like to say hi to it's parent!
+    </button>
+  );
+};
+```
+
+### Conditional Rendering
+In react a lot of times we have to show/hide a component dependend on a condition. This course talks about two common ways to handle this.
+- Ternary
+    - Using curly brackets and a Ternary conditional.
+    - Inline If-Else with Conditional Operator 
+    - Inline If with Logical && Operator 
+```javascript
+import { useState } from "react";
+export const Authenticated = () => {
+  const [isAuth, setAuth] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => {
+          setAuth(!isAuth);
+        }}
+      >
+        Auth
+      </button>
+      <h1>{isAuth ? "Welcome Mr. Auth" : "What did you do to Mr. Auth ?"}</h1>
+
+      {isAuth ? <p>How are you today?</p> : null}
+
+      {isAuth && (
+        <p>
+          It works because in JavaScript, true && expression always evaluates to
+          expression, and false && expression always evaluates to false.
+          Therefore, if the condition is true, the element right after && will
+          appear in the output. If it is false, React will ignore and skip it.
+        </p>
+      )}
+    </>
+  );
+};
+```
+
+#### Preventing Component from Rendering
+- Extra:
+In rare cases you might want a component to hide itself even though it was rendered by another component. To do this return null instead of its render output.
+
+Returning null from a component’s render method does not affect the firing of the component’s lifecycle methods. For instance componentDidUpdate will still be called.
+
+### Creating Lists
