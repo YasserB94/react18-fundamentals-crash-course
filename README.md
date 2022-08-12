@@ -244,3 +244,20 @@ A commonly used term that should sound somewhat familiar after this chapter.
 - In this crashcouse useState, useEffect and useTransition will be taught, tough the other hooks should be learned afterwarts when more familiar with React.
 
 ### Events in React.
+- The Click event
+    - When adding a function to an Event, we do not add parentheses, or it will run when the component renders
+```javascript
+      <button onClick={handleClick}>Click</button>
+```
+    - Or we wrap it in an arrow function, where we can also pass in the event
+```javascript
+ <button
+        onClick={(e) => {
+          handleClick(e);
+        }}
+      >
+        Click
+      </button>
+```
+
+### Patent - Child communication
