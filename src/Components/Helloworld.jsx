@@ -3,6 +3,8 @@ export const HelloWorld = (props) => {
     <>
       <h1>Hello World and {props.name}!</h1>
       <p>{props.desc}</p>
+      {/* if I receive nothing I render nothing :D  */}
+      {props.children}
     </>
   );
 };

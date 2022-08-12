@@ -1,12 +1,9 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { HelloWorld } from "./Components/Helloworld";
+import { IncrementalButton } from "./Components/IncrementalButton";
 function App() {
   return (
     <div className="App">
-      <HelloWorld name="Github" desc="Home of wonderfull things" />
-      <HelloWorld name="React" desc="I hope I come to love you" />
-      <HelloWorld name="Inifinte node_modules" desc="nuff' said" />
+      <IncrementalButton></IncrementalButton>
     </div>
   );
 }
