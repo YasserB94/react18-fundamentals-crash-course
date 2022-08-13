@@ -362,3 +362,72 @@ In rare cases you might want a component to hide itself even though it was rende
 Returning null from a component’s render method does not affect the firing of the component’s lifecycle methods. For instance componentDidUpdate will still be called.
 
 ### Creating Lists
+Lists are very common, here we repeat html for every element in a list.
+- In React this is usually done using JavaScript's [].map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map?retiredLocale=nl) function
+- ```he Map object holds key-value pairs and remembers the original insertion order of the keys. Any value (both objects and primitive values) may be used as either a key or a value. - MdnDocs```
+
+    - .Map() function
+        - Takes in a funciton as an argumnet
+            - The function takes an argument
+    - !!![Warning: Each child in a list should have a unique "key" prop.](https://reactjs.org/link/warning-keys)!!!
+        - The key is internaly used in the DOM to construct the UI in a proper way
+        - It prevents bugs and unintended use when sorting or reordering Arrays
+        - it's common to make this an ID
+```javascript
+export const List = () => {
+  const listItems = ["first-list-item", "second-list-item", "third-list-item"];
+  return (
+    <>
+      {listItems.map((item) => {
+        return <p key={item}>{item}</p>;
+      })}
+    </>
+  );
+};
+```
+
+### Styling Components
+There are different ways to style Components
+- CSS Stylesheets
+    - Import a stylesheet and apply classes to the elements
+```css
+.styled{
+    color:pink
+}
+```
+
+```javascript
+import "../Styled.css";
+export const Styled = () => {
+  return <h1 className="styled">Hello Styled</h1>;
+};
+```
+- Inline Styling
+    - Creating an object and passing it inline
+        - Note: You have to camelCase.
+```javascript
+export const InlineStyled = () => {
+  const style = {
+    color: "pink",
+    fontSize: "2rem",
+  };
+  return <h1 style={style}>Styled Inline</h1>;
+};
+```
+- CSS Modules
+    - Work with CSS module stylesheets
+        - ExampleFile:```modulestyle.module.css```
+        - The modules are imported a bit differently
+        ```javascript
+        import styles from "../modulestyle.module.css";
+        ```
+    - The styles are applied by grabbing them from the style module
+```javascript
+export const ModuleStyled = () => {
+  return <h1 className={styles.moduleStyle}>Module Styled</h1>;
+};
+```
+    - A big advantage about these modules is that they are locally scoped.
+        - They do not bleed to children, places where it is not imported.
+- CSS in JS Libraries
+    - This is a bit more advanded and wil not be covered
