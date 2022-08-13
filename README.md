@@ -476,3 +476,151 @@ export const Form = () => {
   );
 };
 ```
+### HTTP GET && POST
+How to make a get, post request. To practice API requests, there are [websites](https://jsonplaceholder.typicode.com/) that have fake json data for us to practice on.
+To fetch data in React you need:
+    - useState,useEffect hooks
+    - API URL
+
+#### GET
+- First we create a state with an empty array initially to hold our pokemon.
+- We need two hooks
+  - useState
+    - To display the data
+  - useEffect
+    - To Fetch the data
+    - This is a hook that allows us to add sideeffects to our components. in this case fetching an api.
+      - the useEffect takes 2 arguments.
+        - A callback function.
+          - What should the effect do ? 
+        - A dependency array 
+          - Determines when the effect should be retriggered
+          - If empty it will trigger when the component is rendered.
+In this example I only iknow the quesiton will be unique, so that is used as the key. In the second .map to show the wrong answers. we are using the built in crypto object to generate a random unique ID
+```javascript
+import { useState } from "react";
+import { useEffect } from "react";
+export const TriviaList = () => {
+  const [questions, setQuestion] = useState([]);
+  useEffect(() => {
+    const results = [];
+    async function getQuestions() {
+      const response = await fetch("https://opentdb.com/api.php?amount=10");
+      const formatted = await response.json();
+      for (const question of formatted.results) {
+        results.push(question);
+      }
+      setQuestion([...results]);
+    }
+    getQuestions();
+  }, []);
+  return (
+    <>
+      <ul>
+        {questions.map((question) => {
+          return (
+            <li key={question.question}>
+              <ul>
+                <h4>Question</h4>
+                <p>{question.question}</p>
+                <p>Answers:</p>
+                <ul>
+                  <p>Correct:</p>
+                  <li>{question.correct_answer}</li>
+                  <p>Other options:</p>
+                  {question.incorrect_answers.map((a) => {
+                    return <li key={crypto.randomUUID()}>{a}</li>;
+                  })}
+                </ul>
+              </ul>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+};
+```
+
+#### Posting
+Here were using [JSONPlaceHolder](https://jsonplaceholder.typicode.com/) to try post something from a form to an api.
+
+the body this api accepts is determined by the served:
+```javascript
+{
+  body: JSON.stringify({
+    title: 'foo',
+    body: 'bar',
+    userId: 1,
+  }),
+}
+  ```
+- So we can add a simple form to set this data.
+  - For the ID, I will generate an ID with code and not allow the user to specify this
+  - We create a state for every piece of data we want to keep.
+    - And set these as values in the designated input fields
+    - We also call the 'onChange' event to update our state values when the input is changed.
+  - We add a submit button to the form
+    - we listen to the onSubmit event and handle it in a function
+      - This function prevents the default behaviour of the form
+      - This function posts to the API
+        - The request's header,body, url is provided by the json placeholder api.
+  - The AI returns us a response showing us what got posted to the api.
+```javascript
+import { useState } from "react";
+export const PostForm = () => {
+  const [userID, setUserID] = useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      body: JSON.stringify({
+        title: title,
+        body: body,
+        userId: crypto.randomUUID(),
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => console.table(json));
+  };
+  return (
+    <form onSubmit={handleFormSubmit}>
+      <div>
+        <label htmlFor="title">Title: </label>
+        <input
+          type="text"
+          name="title"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        />
+      </div>
+      <br></br>
+      <div>
+        <label htmlFor="body">Body: </label>
+        <input
+          type="text"
+          name="body"
+          value={body}
+          onChange={(e) => {
+            setBody(e.target.value);
+          }}
+        />
+      </div>
+      <button type="submit">Post!</button>
+    </form>
+  );
+};
+```
+- Summary:
+  - Create a form
+  - Tie values to the state object
+  - Make the post request in the submit handler.
+
+### Use Transition
