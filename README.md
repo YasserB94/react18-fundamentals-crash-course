@@ -683,4 +683,78 @@ export const Pokemon = () => {
   );
 };
 ```
-#### The above approach might result in performance issues.
+#### The above approach will result in performance issues.
+- Whenever the input field is changed, the whole list has to be recalculated before the view is updated.
+- With this huge list, this may take a while on slower devices.
+- By default, when a state is changed. react sees this as an update. Updates are received as urgent calculations to be done to rerender our component.
+- Using the Transition hook allows us to tell react. that this is not an urgent calculation.
+  - Urgent updates go first, then transitions.
+- the useTransition() hook returns an array of 2 values.
+  - A boolean that indicates wether the transition is in progress
+  - And a function that triggers the transition.
+
+We can refactor the above code, using another state variable to keep track of the user input.
+
+- Within the handler that updates our user Input variables, we can call our function that triggers the transition.
+  - This function accepts a callback function as an argument
+
+- We can now use the boolean to for example show a loading indicator
+
+- We were able to seperate the systemLoad of the filtering from the userInput.
+
+```javascript
+import POKEMON from "../pokemon.json";
+import { useState, useTransition } from "react";
+export const Pokemon = () => {
+  const [query, setQuery] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const userInputHandler = (e) => {
+    setUserInput(e.target.value);
+    startTransition(() => {
+      setQuery(e.target.value);
+    });
+  };
+  const queriedPokemon = POKEMON.results.filter((pokemon) => {
+    return pokemon.name.includes(query.toLowerCase());
+  });
+  return (
+    <>
+      <div>
+        <label htmlFor="query">Search for a Pokemon:</label>
+        <input
+          type="text"
+          name="query"
+          value={userInput}
+          onChange={userInputHandler}
+        />
+      </div>
+      <div>
+        {isPending ? <h1>Loading results...</h1> : <h1>Search results:</h1>}
+        {queriedPokemon.map((pokemon, index) => {
+          return (
+            <div key={index}>
+              <a href={pokemon.url}>{pokemon.name}</a>
+            </div>
+          );
+        })}
+      </div>
+      <div>
+        <h1>The Whole list:</h1>
+        {POKEMON.results.map((pokemon, index) => {
+          return (
+            <div key={index}>
+              <p>{pokemon.name}</p>
+              <a href={pokemon.url}>
+                Got to the dedicated JSON file from the Pokemon api
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+};
+```
+
+### This concludes the crash course.

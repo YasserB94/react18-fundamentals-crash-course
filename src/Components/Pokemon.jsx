@@ -1,10 +1,14 @@
 import POKEMON from "../pokemon.json";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 export const Pokemon = () => {
   const [query, setQuery] = useState("");
-  const queryInputHandler = (e) => {
-    setQuery(e.target.value);
-    console.log(query);
+  const [userInput, setUserInput] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const userInputHandler = (e) => {
+    setUserInput(e.target.value);
+    startTransition(() => {
+      setQuery(e.target.value);
+    });
   };
   const queriedPokemon = POKEMON.results.filter((pokemon) => {
     return pokemon.name.includes(query.toLowerCase());
@@ -13,10 +17,15 @@ export const Pokemon = () => {
     <>
       <div>
         <label htmlFor="query">Search for a Pokemon:</label>
-        <input type="text" name="query" onChange={queryInputHandler} />
+        <input
+          type="text"
+          name="query"
+          value={userInput}
+          onChange={userInputHandler}
+        />
       </div>
       <div>
-        <h1>Search results:</h1>
+        {isPending ? <h1>Loading results...</h1> : <h1>Search results:</h1>}
         {queriedPokemon.map((pokemon, index) => {
           return (
             <div key={index}>
