@@ -1,5 +1,6 @@
 # React 18 Fundamentals Crash Course 2022
-Following along [Codevolution's](https://www.youtube.com/watch?v=jLS0TkAHvRg) React 18 Fundamentals crash course
+Following along [Codevolution's](https://www.youtube.com/watch?v=jLS0TkAHvRg) React 18 Fundamentals crash course. This is an index for myself to look up basics quickly, perhaps it helps someone else.
+I try to include codeblocks to prevent the search for examples.
 
 ***
 ## Theory
@@ -429,5 +430,49 @@ export const ModuleStyled = () => {
 ```
     - A big advantage about these modules is that they are locally scoped.
         - They do not bleed to children, places where it is not imported.
+
 - CSS in JS Libraries
     - This is a bit more advanded and wil not be covered
+
+### Forms with ReactJS
+Managing forms with react is done with useState.
+- Save the value in the state variable
+- Chain the state setter to the onChange event
+    - Let's practice and add some kind of feedback to the input field.
+- It is common to prevent the form's standard submit prehaviour with a cusom function
+    - Let's also add some fun in here, haven't given credit to bulba yet. and we are on line 442....
+```javascript
+import { useState } from "react";
+
+export const Form = () => {
+  const [pokemon, setPokemon] = useState("Bulbasaur");
+  const [goodTrainer, setGoodTrainer] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    switch (pokemon) {
+      case "Bulbasaur":
+      case "bulbasaur":
+      case "bulba":
+        setGoodTrainer(true);
+        break;
+      default:
+        setGoodTrainer(false);
+    }
+  };
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="pokemon">The best pokemon is:</label>
+      <input
+        name="pokemonName"
+        type="text"
+        value={pokemon}
+        onChange={(e) => {
+          setPokemon(e.target.value);
+        }}
+      ></input>
+      <button type="submit">I have chosen.</button>
+      {goodTrainer && <h1>Yes, there is only 1 number one!</h1>}
+    </form>
+  );
+};
+```

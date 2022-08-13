@@ -6,12 +6,11 @@ import { List } from "./Components/List";
 import { Styled } from "./Components/Styled";
 import { InlineStyled } from "./Components/InlineStyles";
 import { ModuleStyled } from "./Components/ModuleStyled";
+import { Form } from "./Components/Form";
 function App() {
   return (
     <div className="App">
-      <Styled></Styled>
-      <InlineStyled></InlineStyled>
-      <ModuleStyled></ModuleStyled>
+      <Form></Form>
     </div>
   );
 }
