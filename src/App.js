@@ -1,9 +1,9 @@
 import "./App.css";
-import { PostForm } from "./Components/PostForm";
+import { Pokemon } from "./Components/Pokemon";
 function App() {
   return (
     <div className="App">
-      <PostForm></PostForm>
+      <Pokemon />
     </div>
   );
 }

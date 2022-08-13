@@ -623,4 +623,64 @@ export const PostForm = () => {
   - Tie values to the state object
   - Make the post request in the submit handler.
 
-### Use Transition
+### UseTransition() Hook
+A new Hook from react 18, this is not a core functionality. But a hook introduced to increase performance.
+- To provide a lot of data I added a pokemon.json file in the root of the project.
+  - This contains 1154 pokemons
+      - each has a name and url to detials.
+  - I use the pokemon's index in the array as a unique key.
+
+- Now let's make the pokemon's searchable.
+  - We add a state value to store the query
+  - We add an input field to update the query
+  - We create a filtered array that uses the query to filter our total list.
+    - Since the query is a state, the view will rerender whenever the query changes.
+- The result looks like this, we can now search for a pokemon to go straigh to it's API link
+```javascript
+import POKEMON from "../pokemon.json";
+import { useState } from "react";
+export const Pokemon = () => {
+  const [query, setQuery] = useState("");
+  const queryInputHandler = (e) => {
+    setQuery(e.target.value);
+    console.log(query);
+  };
+  const queriedPokemon = POKEMON.results.filter((pokemon) => {
+    return pokemon.name.includes(query.toLowerCase());
+  });
+  return (
+    <>
+      <div>
+        <label htmlFor="query">Search for a Pokemon:</label>
+        <input type="text" name="query" onChange={queryInputHandler} />
+      </div>
+      <div>
+        <h1>Search results:</h1>
+        {queriedPokemon.map((pokemon, index) => {
+          return (
+            <div>
+              <a key={index} href={pokemon.url}>
+                {pokemon.name}
+              </a>
+            </div>
+          );
+        })}
+      </div>
+      <div>
+        <h1>The Whole list:</h1>
+        {POKEMON.results.map((pokemon, index) => {
+          return (
+            <div key={index}>
+              <p>{pokemon.name}</p>
+              <a href={pokemon.url}>
+                Got to the dedicated JSON file from the Pokemon api
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+};
+```
+#### The above approach might result in performance issues.
